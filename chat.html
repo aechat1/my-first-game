@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>شات الإمارات</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
+        #chat-container { max-width: 400px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #messages { height: 300px; overflow-y: scroll; padding: 15px; border-bottom: 1px solid #ddd; }
+        #input-area { padding: 10px; display: flex; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px; background: #0084ff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <div id="messages"></div>
+    <div id="input-area">
+        <input type="text" id="msgInput" placeholder="اكتب رسالتك...">
+        <button onclick="sendMessage()">إرسال</button>
+    </div>
+</div>
+
+<script>
+    function sendMessage() {
+        let input = document.getElementById("msgInput");
+        let msg = input.value;
+        if (msg.trim() !== "") {
+            let div = document.createElement("div");
+            div.innerHTML = "<b>أنت:</b> " + msg;
+            document.getElementById("messages").appendChild(div);
+            input.value = "";
+            document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+        }
+    }
+</script>
+
+</body>
+</html>
