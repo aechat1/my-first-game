@@ -2,44 +2,50 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Tajawal', sans-serif; overflow: hidden; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: 'Tajawal', sans-serif; overflow: hidden; }
 
-        /* خلفية الفيديو - الاسم بحرف b صغير */
+        /* هذا الكود يضمن تغطية الفيديو لشاشة الموبايل بالكامل */
         #bg-video {
-            position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%;
-            z-index: -1; object-fit: cover;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* يملأ الشاشة بدون تغيير أبعاد الفيديو */
+            z-index: -1;
         }
 
         .container {
             display: flex; flex-direction: column; justify-content: flex-end; 
-            align-items: center; height: 95vh; padding-bottom: 50px;
+            align-items: center; height: 100vh; padding-bottom: 50px;
         }
 
-        /* البوردرات المتدرجة */
         .box {
-            width: 85%; max-width: 350px;
-            padding: 20px; margin: 10px 0;
+            width: 85%; max-width: 300px;
+            padding: 15px; margin: 10px 0;
             border-radius: 20px;
             text-align: center; color: white;
-            /* التدرج اللوني بين البرتقالي والسماوي */
-            border: 2px solid transparent;
-            background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid transparent;
+            background-image: linear-gradient(rgba(255,255,255,0.05), rgba(255,255,255,0.05)), 
                               linear-gradient(to right, #ff7e5f, #2ebf91);
             background-origin: border-box;
             background-clip: padding-box, border-box;
         }
 
-        h1 { font-size: 20px; margin: 0; }
-        p { font-size: 14px; opacity: 0.9; margin-top: 5px; }
-        .link { display: block; color: white; text-decoration: none; font-weight: bold; margin-top: 5px;}
+        h1 { font-size: 18px; margin: 0; }
+        p { font-size: 12px; margin: 5px 0 0 0; opacity: 0.9; }
+        .link { display: block; color: white; text-decoration: none; font-weight: bold; font-size: 15px;}
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop playsinline id="bg-video">
+    <video autoplay muted loop playsinline poster="preview.jpg" id="bg-video">
         <source src="background.mp4" type="video/mp4">
     </video>
 
