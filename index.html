@@ -5,43 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { 
-            /* تدرج من بنفسجي فاتح (أرجواني) إلى بنفسجي متوسط غني - بدون أسود */
-            background: linear-gradient(180deg, #6d28d9, #4c1d95, #2e1065);
+            /* تدرج هادئ جداً من البنفسجي للبنفسجي الغني (بدون أسود) */
+            background: linear-gradient(135deg, #4c1d95, #2e1065);
             display: flex; justify-content: center; align-items: center; 
             min-height: 100vh; margin: 0; font-family: sans-serif;
-            background-attachment: fixed;
         }
 
         .card { 
-            background: rgba(76, 29, 149, 0.7); /* خلفية نصف شفافة للفخامة */
-            padding: 50px 40px; 
-            border-radius: 30px; 
-            width: 85%; 
-            max-width: 500px;
-            text-align: center; 
-            color: white;
-            position: relative;
-            /* الإطار المتحرك بألوان العلم */
-            border: 6px solid;
-            border-image-source: linear-gradient(45deg, #FF0000, #00FF00, #FFFFFF, #000000);
-            border-image-slice: 1;
-            animation: rotate-border 6s linear infinite;
+            background: #1e0a35; /* لون بنفسجي غامق وثابت */
+            padding: 50px; 
+            border-radius: 20px; 
+            width: 85%; max-width: 400px;
+            text-align: center; color: white;
+            /* إطار ثابت ليموني نحيف جداً وأنيق */
+            border: 1px solid #CCFF00;
         }
 
-        @keyframes rotate-border {
-            to { filter: hue-rotate(360deg); }
-        }
-
-        h1 { color: #CCFF00; font-size: 2.5em; margin-bottom: 20px; }
-        p { color: #e9d5ff; font-size: 1.2em; margin-bottom: 40px; }
+        h1 { color: #CCFF00; font-size: 28px; margin-bottom: 10px; }
+        p { color: #d1d5db; margin-bottom: 40px; font-size: 16px; }
         
         .btn { 
-            display: block; background: #7c3aed; color: white; 
-            padding: 20px; margin: 20px 0; text-decoration: none; 
-            border-radius: 15px; font-weight: bold; font-size: 1.1em;
+            display: block; 
+            background: transparent; /* أزرار شفافة بحدود ليمونية */
+            color: #CCFF00; 
+            padding: 15px; 
+            margin: 15px 0; 
+            text-decoration: none; 
+            border-radius: 10px; 
+            border: 1px solid #CCFF00;
+            font-weight: bold;
             transition: 0.3s;
         }
-        .btn:hover { background: #CCFF00; color: #4c1d95; }
+        .btn:hover { 
+            background: #CCFF00; 
+            color: #1e0a35; 
+        }
     </style>
 </head>
 <body>
