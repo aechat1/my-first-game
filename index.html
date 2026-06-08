@@ -12,25 +12,30 @@
             object-fit: cover; z-index: -1;
         }
 
-        /* حاوية العناصر */
+        /* حاوية الصناديق - تم دفعها للأسفل هنا */
         .container {
-            display: flex; flex-direction: column; justify-content: center; /* توسيط عمودي */
-            align-items: center; height: 100vh; gap: 15px; /* مسافة ثابتة بين الصناديق */
-            padding: 20px;
+            display: flex; flex-direction: column; 
+            justify-content: flex-end; /* دفع العناصر للأسفل */
+            align-items: center; height: 90vh; 
+            padding-bottom: 50px; gap: 15px;
         }
 
-        /* الصناديق الشفافة بإطار متدرج */
+        /* الصندوق الشفاف تماماً مع إطار بنفسجي متحرك */
         .box {
-            width: 100%; max-width: 300px;
+            width: 85%; max-width: 300px;
             padding: 15px 10px;
             border-radius: 20px;
             text-align: center; color: white;
-            border: 2px solid transparent;
-            background-image: linear-gradient(#000, #000), 
-                              linear-gradient(to right, #ff7e5f, #2ebf91);
-            background-origin: border-box;
-            background-clip: padding-box, border-box;
+            background: transparent; /* شفافية تامة */
+            border: 2px solid #8a2be2; /* اللون البنفسجي الأساسي */
+            animation: border-glow 3s infinite alternate; /* حركة الإطار */
             text-decoration: none;
+        }
+
+        /* تأثير حركة الإطار البنفسجي */
+        @keyframes border-glow {
+            from { border-color: #8a2be2; box-shadow: 0 0 5px #8a2be2; }
+            to { border-color: #ff00ff; box-shadow: 0 0 15px #ff00ff; }
         }
 
         h1 { font-size: 18px; margin: 0; }
