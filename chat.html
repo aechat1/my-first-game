@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <title>شات الإمارات</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
-        #chat-container { max-width: 400px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        #messages { height: 300px; overflow-y: scroll; padding: 15px; border-bottom: 1px solid #ddd; }
-        #input-area { padding: 10px; display: flex; }
-        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
-        button { padding: 10px; background: #0084ff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        body { font-family: sans-serif; background: #0f172a; margin: 0; padding: 20px; color: white; }
+        #chat-container { max-width: 500px; margin: auto; background: #1e293b; border-radius: 15px; overflow: hidden; padding: 20px; }
+        #messages { height: 300px; overflow-y: scroll; border-bottom: 1px solid #334155; margin-bottom: 10px; padding: 10px; }
+        input { width: 70%; padding: 10px; border-radius: 5px; border: none; }
+        button { padding: 10px; background: #38bdf8; border: none; border-radius: 5px; color: #0f172a; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="chat-container">
+    <h2>غرفة دردشة الإمارات</h2>
     <div id="messages"></div>
-    <div id="input-area">
+    <div style="display:flex; gap: 5px;">
         <input type="text" id="msgInput" placeholder="اكتب رسالتك...">
         <button onclick="sendMessage()">إرسال</button>
     </div>
@@ -25,10 +25,9 @@
 <script>
     function sendMessage() {
         let input = document.getElementById("msgInput");
-        let msg = input.value;
-        if (msg.trim() !== "") {
+        if (input.value.trim() !== "") {
             let div = document.createElement("div");
-            div.innerHTML = "<b>أنت:</b> " + msg;
+            div.innerHTML = "<b>أنت:</b> " + input.value;
             document.getElementById("messages").appendChild(div);
             input.value = "";
             document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
