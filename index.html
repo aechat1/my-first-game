@@ -5,46 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصتي الإماراتية</title>
     <style>
+        /* الخلفية البنفسجية الفخمة */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #0f172a; 
+            background: linear-gradient(135deg, #2e0249, #570a57); 
             color: white; 
             text-align: center; 
             padding: 50px 20px; 
             margin: 0;
+            min-height: 100vh;
         }
         .card { 
-            background: #1e293b; 
+            background: rgba(46, 2, 73, 0.8); 
             padding: 40px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
-            max-width: 500px; 
+            border-radius: 25px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+            max-width: 450px; 
             margin: auto; 
+            border: 1px solid #9333ea;
         }
-        h1 { color: #38bdf8; margin-bottom: 20px; }
-        p { color: #94a3b8; margin-bottom: 30px; }
+        /* العنوان باللون الأخضر الليموني المضيء */
+        h1 { color: #CCFF00; margin-bottom: 20px; text-shadow: 0 0 10px #CCFF00; }
+        p { color: #e2e8f0; margin-bottom: 30px; }
+        
         .btn { 
             display: block; 
-            background: #38bdf8; 
-            color: #0f172a; 
+            background: #9333ea; 
+            color: white; 
             padding: 15px; 
             margin: 15px 0; 
             text-decoration: none; 
-            border-radius: 10px; 
+            border-radius: 12px; 
             font-weight: bold;
             transition: 0.3s;
+            border: 2px solid #CCFF00;
         }
-        .btn:hover { background: #7dd3fc; transform: scale(1.02); }
+        .btn:hover { 
+            background: #CCFF00; 
+            color: #2e0249;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h1>أهلاً بك في منصتي</h1>
-        <p>نعمل على بناء تجربة تواصل وألعاب تليق بطموحكم في الإمارات.</p>
+        <h1>منصتي الإماراتية</h1>
+        <p>تجربة تواصل وألعاب تليق بطموحكم.</p>
         
         <a href="chat.html" class="btn">دخول الشات</a>
-        
         <a href="#" class="btn">تجربة الألعاب</a>
     </div>
 
