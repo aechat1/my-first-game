@@ -1,28 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-    <title>لعبتي الأولى</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصتي الإماراتية</title>
     <style>
-        body { background: #1a1a1a; color: #fff; text-align: center; font-family: Arial; padding-top: 50px; }
-        input { padding: 10px; font-size: 16px; border-radius: 5px; border: none; }
-        button { padding: 10px 20px; font-size: 16px; background: #00ffcc; border: none; border-radius: 5px; cursor: pointer; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #0f172a; 
+            color: white; 
+            text-align: center; 
+            padding: 50px 20px; 
+            margin: 0;
+        }
+        .card { 
+            background: #1e293b; 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+            max-width: 500px; 
+            margin: auto; 
+        }
+        h1 { color: #38bdf8; margin-bottom: 20px; }
+        p { color: #94a3b8; margin-bottom: 30px; }
+        .btn { 
+            display: block; 
+            background: #38bdf8; 
+            color: #0f172a; 
+            padding: 15px; 
+            margin: 15px 0; 
+            text-decoration: none; 
+            border-radius: 10px; 
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn:hover { background: #7dd3fc; transform: scale(1.02); }
     </style>
 </head>
 <body>
-    <h1>لعبة تخمين الرقم</h1>
-    <p>خمن رقماً بين 1 و 10</p>
-    <input type="number" id="guess" min="1" max="10">
-    <button onclick="check()">تحقق</button>
-    <h2 id="result"></h2>
 
-    <script>
-        let random = Math.floor(Math.random() * 10) + 1;
-        function check() {
-            let g = document.getElementById("guess").value;
-            let r = document.getElementById("result");
-            if(g == random) r.innerHTML = "🎉 كفو! جبتها صح";
-            else r.innerHTML = "❌ خطأ، حاول مرة ثانية";
-        }
-    </script>
+    <div class="card">
+        <h1>أهلاً بك في منصتي</h1>
+        <p>نعمل على بناء تجربة تواصل وألعاب تليق بطموحكم في الإمارات.</p>
+        
+        <a href="chat.html" class="btn">دخول الشات</a>
+        
+        <a href="#" class="btn">تجربة الألعاب</a>
+    </div>
+
 </body>
 </html>
