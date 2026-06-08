@@ -2,37 +2,46 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { 
-            background: #120024; /* خلفية بنفسجية داكنة */
-            color: white; text-align: center; padding: 50px 20px; font-family: sans-serif;
-            margin: 0; min-height: 100vh;
+            /* تدرج من بنفسجي فاتح (أرجواني) إلى بنفسجي متوسط غني - بدون أسود */
+            background: linear-gradient(180deg, #6d28d9, #4c1d95, #2e1065);
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; margin: 0; font-family: sans-serif;
+            background-attachment: fixed;
         }
 
-        /* كلاس للصندوق مع إطار متحرك بألوان علم الإمارات */
         .card { 
-            background: #2e0249; 
-            padding: 40px; border-radius: 25px; max-width: 450px; margin: auto;
+            background: rgba(76, 29, 149, 0.7); /* خلفية نصف شفافة للفخامة */
+            padding: 50px 40px; 
+            border-radius: 30px; 
+            width: 85%; 
+            max-width: 500px;
+            text-align: center; 
+            color: white;
             position: relative;
-            border: 4px solid transparent;
-            /* حركة ألوان العلم */
-            background-clip: padding-box;
-            animation: border-rotate 5s linear infinite;
+            /* الإطار المتحرك بألوان العلم */
+            border: 6px solid;
+            border-image-source: linear-gradient(45deg, #FF0000, #00FF00, #FFFFFF, #000000);
+            border-image-slice: 1;
+            animation: rotate-border 6s linear infinite;
         }
 
-        @keyframes border-rotate {
-            0% { border-color: #FF0000; } /* أحمر */
-            25% { border-color: #00FF00; } /* أخضر */
-            50% { border-color: #FFFFFF; } /* أبيض */
-            75% { border-color: #000000; } /* أسود */
-            100% { border-color: #FF0000; }
+        @keyframes rotate-border {
+            to { filter: hue-rotate(360deg); }
         }
 
-        h1 { color: #CCFF00; text-shadow: 0 0 10px #CCFF00; }
+        h1 { color: #CCFF00; font-size: 2.5em; margin-bottom: 20px; }
+        p { color: #e9d5ff; font-size: 1.2em; margin-bottom: 40px; }
+        
         .btn { 
-            display: block; background: #9333ea; color: white; padding: 15px; 
-            margin: 15px 0; text-decoration: none; border-radius: 12px; font-weight: bold;
+            display: block; background: #7c3aed; color: white; 
+            padding: 20px; margin: 20px 0; text-decoration: none; 
+            border-radius: 15px; font-weight: bold; font-size: 1.1em;
+            transition: 0.3s;
         }
+        .btn:hover { background: #CCFF00; color: #4c1d95; }
     </style>
 </head>
 <body>
