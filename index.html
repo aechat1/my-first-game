@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>لوحة لعبة aechat.ae - الدخول من الحفرة 18</title>
+    <title>لوحة لعبة aechat.ae - المربعات الخشبية</title>
     <style>
         body {
-            background-color: #1a0f0a;
+            background-color: #1a0f0a; /* خلفية الطاولة الداكنة */
             color: #f4ebd0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -35,10 +35,10 @@
         canvas {
             width: 100%;
             height: 100%;
-            border: 12px solid #2b1a10;
-            border-radius: 28px;
-            background-color: #dfb68d;
-            box-shadow: inset 0 0 60px rgba(0,0,0,0.6), 0 15px 30px rgba(0,0,0,0.7);
+            border: 12px solid #2b1a10; /* إطار خشبي فخم */
+            border-radius: 20px;
+            background-color: #dfb68d; /* أرضية الخشب الدافئة */
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 15px 30px rgba(0,0,0,0.6);
         }
         .cards-area {
             margin-top: 15px;
@@ -51,7 +51,7 @@
         .game-card {
             width: 65px;
             height: 95px;
-            background: linear-gradient(135deg, #2c251e, #1a1512);
+            background: linear-gradient(135deg, #2c251e, #1a1512); /* تصميم الكروت الداكن */
             border: 2px solid #c5a059;
             border-radius: 8px;
             box-shadow: 0 6px 12px rgba(0,0,0,0.5);
@@ -62,7 +62,6 @@
             font-weight: bold;
             color: #e5c180;
             font-size: 12px;
-            position: relative;
             cursor: pointer;
             transition: transform 0.2s;
         }
@@ -97,6 +96,10 @@
         const boardSize = 600;
         const center = boardSize / 2;
         
+        // تقسيم اللوحة لشبكة مربعات داخلية
+        const gridCount = 20; 
+        const squareSize = boardSize / gridCount;
+
         const playerColors = {
             player1: '#2ecc71', // أخضر
             player2: '#2980b9', // أزرق
@@ -104,104 +107,101 @@
             player4: '#f1c40f'  // أصفر
         };
 
-        function getSidePoints(p1, p2, count) {
-            const points = [];
-            const controlX = center + ((p1.x + p2.x)/2 - center) * 0.28;
-            const controlY = center + ((p1.y + p2.y)/2 - center) * 0.28;
-
-            for (let i = 0; i < count; i++) {
-                const t = i / (count - 1);
-                const x = (1-t)*(1-t)*p1.x + 2*(1-t)*t*controlX + t*t*p2.x;
-                const y = (1-t)*(1-t)*p1.y + 2*(1-t)*t*controlY + t*t*p2.y;
-                points.push({x, y});
+        // دالة مخصصة لإنشاء مسار الضلع المستقيم (19 مربعاً)
+        function generateSideGridPath() {
+            const path = [];
+            // الإطار الخارجي المستقيم للضلع (19 مربع بالتسلسل)
+            for(let k = 0; k < 19; k++) {
+                path.push({ gx: k, gy: 0 });
             }
-            return points;
+            return path;
+        }
+
+        // تدوير المربعات لتوزيعها على الجهات الأربعة بالتساوي
+        function rotateCoordinates(pt, sideIndex) {
+            const max = gridCount - 1; // 19
+            if (sideIndex === 0) return { x: pt.gx, y: pt.gy };                  // العلوي
+            if (sideIndex === 1) return { x: max - pt.gy, y: pt.gx };            // الأيمن
+            if (sideIndex === 2) return { x: max - pt.gx, y: max - pt.gy };      // السفلي
+            if (sideIndex === 3) return { x: pt.gy, y: max - pt.gx };            // الأيسر
         }
 
         function drawBoard() {
             ctx.clearRect(0, 0, boardSize, boardSize);
             drawWoodTexture();
 
-            const margin = 50;
-            const topC = { x: center, y: margin };
-            const rightC = { x: boardSize - margin, y: center };
-            const bottomC = { x: center, y: boardSize - margin };
-            const leftC = { x: margin, y: center };
+            const baseSide = generateSideGridPath();
+            const colors = [playerColors.player1, playerColors.player2, playerColors.player3, playerColors.player4];
 
-            const holesCount = 19;
-            const sides = [
-                getSidePoints(topC, rightC, holesCount),
-                getSidePoints(rightC, bottomC, holesCount),
-                getSidePoints(bottomC, leftC, holesCount),
-                getSidePoints(leftC, topC, holesCount)
-            ];
+            for (let side = 0; side < 4; side++) {
+                // 1. رسم الـ 19 مربعاً الخشبية الخارجية لكل لاعب
+                baseSide.forEach((gridPt, index) => {
+                    const stepNum = index + 1;
+                    const finalGrid = rotateCoordinates(gridPt, side);
 
-            sides.forEach((sidePoints, playerIndex) => {
-                const colors = [playerColors.player1, playerColors.player2, playerColors.player3, playerColors.player4];
-                
-                // رسم الـ 19 حفرة الخارجية
-                sidePoints.forEach((pt, index) => {
-                    let isStart = (index === 0);
-                    let color = isStart ? colors[playerIndex] : '#3d2314';
-                    drawHole(pt.x, pt.y, color, isStart);
+                    let isStart = (stepNum === 1);
+                    let color = isStart ? colors[side] : '#3d2516'; // مربع البداية ملون، والباقي خشبي غامق محفور
+                    
+                    drawWoodSquare(finalGrid.x * squareSize, finalGrid.y * squareSize, color, isStart, stepNum);
                 });
 
-                // تعديل ذكي: التقاط الحفرة رقم 18 (الفهرس 17 في البرمجة لأن العد يبدأ من 0)
-                const turnHole = sidePoints[17]; 
-                
-                // تحديد اتجاه الانحراف للداخل نحو المركز بدقة
+                // 2. رسم مسار الأمان الخماسي انطلاقاً من المربع رقم 18 (الفهرس 17) ليدخل عمودياً للداخل
+                const turnGridPt = baseSide[17]; // المربع 18
                 let dx = 0, dy = 0;
-                if (playerIndex === 0) { dx = -24; dy = 24; }   // الأخضر للداخل أسفل يسار
-                if (playerIndex === 1) { dx = -24; dy = -24; }  // الأزرق للداخل أعلى يسار
-                if (playerIndex === 2) { dx = 24; dy = -24; }   // الأحمر للداخل أعلى يمين
-                if (playerIndex === 3) { dx = 24; dy = 24; }    // الأصفر للداخل أسفل يمين
 
-                // رسم الـ 5 حفر المتتالية للداخل انطلاقاً من الحفرة 18
+                if (side === 0) dy = 1;  // العلوي ينزل للأسفل
+                if (side === 1) dx = -1; // الأيمن يتجه لليسار
+                if (side === 2) dy = -1; // السفلي يصعد للأعلى
+                if (side === 3) dx = 1;  // الأيسر يتجه لليمين
+
                 for (let h = 1; h <= 5; h++) {
-                    const hx = turnHole.x + (dx * h);
-                    const hy = turnHole.y + (dy * h);
-                    drawHole(hx, hy, colors[playerIndex] + 'aa', false);
+                    const hx = (turnGridPt.gx + dx * h);
+                    const hy = (turnGridPt.gy + dy * h);
+                    const finalHomeGrid = rotateCoordinates({ gx: hx, gy: hy }, side);
+                    
+                    // رسم مربعات الأمان بلون اللاعب المطفأ (شفافية خفيفة لعنصر الفخامة)
+                    drawWoodSquare(finalHomeGrid.x * squareSize, finalHomeGrid.y * squareSize, colors[side] + 'bb', false, h);
                 }
-            });
+            }
 
             drawCenterDiscardPile();
         }
 
         function drawWoodTexture() {
-            let gradient = ctx.createRadialGradient(center, center, 50, center, center, 300);
-            gradient.addColorStop(0, '#e8be96');
+            // تدرج لوني يعطي عمق وملمس الطاولة الخشبية الدائرية
+            let gradient = ctx.createRadialGradient(center, center, 40, center, center, 280);
+            gradient.addColorStop(0, '#eac39e');
             gradient.addColorStop(0.8, '#d4a574');
-            gradient.addColorStop(1, '#b58352');
+            gradient.addColorStop(1, '#ac7a48');
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, boardSize, boardSize);
 
-            ctx.strokeStyle = 'rgba(74, 43, 23, 0.05)';
+            // نقوش دائرية خفيفة لعروق الخشب
+            ctx.strokeStyle = 'rgba(74, 43, 23, 0.04)';
             ctx.lineWidth = 2;
-            for(let r = 40; r < 260; r += 25) {
+            for(let r = 50; r < 250; r += 30) {
                 ctx.beginPath();
                 ctx.arc(center, center, r, 0, 2 * Math.PI);
                 ctx.stroke();
             }
         }
 
-        function drawHole(x, y, color, isStart) {
+        function drawWoodSquare(x, y, color, isStart, number) {
             ctx.save();
-            ctx.beginPath();
-            ctx.arc(x, y, 9.5, 0, 2 * Math.PI);
-            
-            if (isStart) {
-                ctx.fillStyle = color;
-                ctx.fill();
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-            } else {
-                ctx.fillStyle = '#26150b';
-                ctx.fill();
-                ctx.strokeStyle = '#54341e';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            }
+            ctx.fillStyle = color;
+            ctx.fillRect(x + 1, y + 1, squareSize - 2, squareSize - 2);
+
+            // إطار يعطي تأثير الحفر ثلاثي الأبعاد للمربعات
+            ctx.strokeStyle = isStart ? '#fff' : '#54341e';
+            ctx.lineWidth = isStart ? 2 : 1;
+            ctx.strokeRect(x + 1, y + 1, squareSize - 2, squareSize - 2);
+
+            // كتابة أرقام الخانات بشكل خفي وأنيق داخل المربعات الخشبية
+            ctx.fillStyle = isStart ? '#fff' : 'rgba(255,255,255,0.25)';
+            ctx.font = isStart ? 'bold 11px Arial' : '9px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(number.toString(), x + (squareSize / 2), y + (squareSize / 2));
             ctx.restore();
         }
 
