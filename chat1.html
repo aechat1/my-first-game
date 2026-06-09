@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AE CHAT - المنصة الرئيسية</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; user-select: none; -webkit-user-select: none; }
+        html, body { width: 100%; height: 100dvh; overflow: hidden; background: #0c0214; display: flex; justify-content: center; align-items: center; }
+        
+        /* الخلفية البنفسجية المخملية الفاخرة المطابقة لألوان الكنبة */
+        .mobile-container { 
+            width: 100%; 
+            max-width: 430px; 
+            height: 100dvh; 
+            background: linear-gradient(180deg, #451066 0%, #25073b 50%, #0d0114 100%); 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            padding: 0; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.9); 
+            overflow: hidden; 
+        }
+        
+        .stars-layer { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 0; opacity: 0.6; }
+        .stars-layer::before, .stars-layer::after { content: ""; position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; box-shadow: 40px 120px #fff, 150px 60px #caa1f2, 280px 240px #fff, 80px 350px #fff, 320px 420px #caa1f2, 190px 510px #fff, 60px 620px #fff, 240px 710px #caa1f2, 340px 180px #fff, 110px 480px #fff, 250px 310px #fff; animation: sparkle 4s linear infinite; }
+        .stars-layer::after { box-shadow: 90px 40px #fff, 210px 180px #caa1f2, 50px 290px #fff, 300px 110px #fff, 130px 400px #caa1f2, 270px 580px #fff, 160px 670px #fff; animation: sparkle 6s linear infinite alternate; }
+        @keyframes sparkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+
+        .neon-glow-bg { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; background: radial-gradient(circle, rgba(69, 16, 102, 0.3) 0%, rgba(37, 7, 59, 0.1) 40%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: 0; animation: neonPulse 6s ease-in-out infinite alternate; pointer-events: none; }
+        @keyframes neonPulse { 0% { transform: translate(-50%, -50%) scale(0.9); filter: blur(10px); } 100% { transform: translate(-50%, -50%) scale(1.3); filter: blur(25px); } }
+        
+        /* 🇦🇪 حركة اللمعان والتلألأ لخطوط علم الإمارات 🇦🇪 */
+        @keyframes uaeGlitter { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+
+        /* [الهيدر العلوي - تفعيل حركة علم الإمارات بالكامل] */
+        .top-header-wrapper {
+            position: relative;
+            padding-bottom: 2px;
+            background: linear-gradient(90deg, #ff0000, #00732f, #ffffff, #000000, #ff0000);
+            background-size: 200% auto;
+            animation: uaeGlitter 3s linear infinite;
+            z-index: 2;
+        }
+        .top-header-inner {
+            background: rgba(20, 2, 33, 0.98);
+            padding: 10px 15px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-room-section { display: flex; align-items: center; gap: 10px; max-width: 75%; }
+        .header-room-badge { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.15); background: linear-gradient(135deg, #451066 0%, #150224 100%); display: flex; justify-content: center; align-items: center; font-size: 14px; flex-shrink: 0; }
+        .header-room-info { display: flex; flex-direction: column; text-align: right; }
+        .header-room-title { font-size: 15px; color: #ffffff; font-weight: 800; }
+        .header-room-desc { font-size: 10px; color: #b899d9; opacity: 0.9; font-weight: 500; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .top-action-btn { background: rgba(255, 59, 48, 0.15); border: 1px solid rgba(255, 59, 48, 0.4); padding: 5px 12px; border-radius: 6px; color: #ff453a; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.3s; flex-shrink: 0; }
+
+        /* شريط الإعلان النابض */
+        .pulsing-ad-bar {
+            background: linear-gradient(135deg, rgba(20, 2, 33, 0.95) 0%, rgba(13, 1, 20, 0.95) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 2;
+            cursor: pointer;
+            position: relative;
+        }
+        .ad-click-badge { font-size: 10px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; padding: 4px 10px; border-radius: 5px; font-weight: 600; flex-shrink: 0; }
+        
+        .ad-marquee-container { flex: 1; overflow: hidden; display: flex; align-items: center; }
+        .ad-marquee-text { display: inline-block; white-space: nowrap; animation: marqueeLeftToRight 14s linear infinite; }
+        @keyframes marqueeLeftToRight {
+            0% { transform: translate3d(-100%, 0, 0); }
+            100% { transform: translate3d(100%, 0, 0); }
+        }
+        .ad-marquee-text h4 { color: #ffffff; font-size: 13px; font-weight: 700; display: inline-block; margin-left: 8px; }
+        .ad-marquee-text p { color: #bca0d6; font-size: 11px; display: inline-block; margin-left: 5px; }
+
+        /* المساحة الوسطى للمحادثة وبوكس الشات */
+        .main-content-space {
+            flex: 1;
+            width: 100%;
+            z-index: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .chat-messages-container {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .chat-message {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 14px;
+            border-radius: 12px;
+            max-width: 85%;
+            color: #ffffff;
+            font-size: 14px;
+            align-self: flex-start;
+            word-break: break-word;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        /* أحجام وتنسيق الابتسامات المتحركة GIFs */
+        .animated-emoji-img { width: 24px; height: 24px; object-fit: contain; display: inline-block; vertical-align: middle; }
+        .picker-emoji-item img { width: 32px; height: 32px; object-fit: contain; }
+
+        /* صندوق الشات الفاخر المعتم فوق الفوتر مباشرة */
+        .royal-chat-box-holder {
+            width: 100%;
+            position: relative;
+            z-index: 10;
+            padding-top: 5px;
+        }
+        .royal-chat-box {
+            width: 100%;
+            background: #25073b; 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            border-radius: 14px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: row; 
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .royal-input-container { flex: 1; display: flex; align-items: center; border-bottom: 2px solid rgba(255, 255, 255, 0.25); padding: 2px; min-height: 36px; }
+        .chat-input-div { width: 100%; background: transparent; border: none; color: #ffffff; font-size: 15px; outline: none; text-align: right; white-space: pre-wrap; word-break: break-all; }
+        .chat-input-div[placeholder]:empty:before { content: attr(placeholder); color: rgba(255, 255, 255, 0.4); }
+
+        .royal-emoji-area { display: flex; flex-direction: row; align-items: center; gap: 8px; border-right: 1px solid rgba(255, 255, 255, 0.15); padding-right: 8px; direction: ltr; }
+        .royal-emoji-btn { cursor: pointer; background: none; border: none; display: flex; justify-content: center; align-items: center; }
+        .royal-emoji-btn:active { transform: scale(0.85); }
+        .more-emoji-btn { font-size: 15px; color: #b899d9; font-weight: bold; cursor: pointer; }
+        .royal-send-btn { font-size: 18px; color: #52b788; font-weight: bold; cursor: pointer; background: none; border: none; padding: 0 4px; }
+
+        /* صندوق الابتسامات الإضافية المنبثق */
+        .emoji-picker-popup {
+            position: absolute;
+            bottom: 65px; 
+            left: 0;
+            right: 0;
+            background: #140221;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 12px;
+            display: none;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            z-index: 100;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+        .emoji-picker-popup.active { display: grid; }
+        .picker-emoji-item { display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 4px; border-radius: 8px; }
+
+        /* [الفوتر السفلي الأصلي - تفعيل حركة علم الإمارات بالكامل للخط العلوي] */
+        .bottom-footer-wrapper {
+            position: relative;
+            padding-top: 2px;
+            background: linear-gradient(90deg, #00732f, #ffffff, #000000, #ff0000, #00732f);
+            background-size: 200% auto;
+            animation: uaeGlitter 3s linear infinite; /* تفعيل الحركة التلألؤية للخط السفلي رغماً عن أي حظر */
+            z-index: 2;
+        }
+        .bottom-footer-inner {
