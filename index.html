@@ -3,61 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <title>لوحة لعبة aechat.ae</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: 'Tajawal', sans-serif; overflow: hidden; }
-
-        #bg-video {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            object-fit: cover; z-index: -1;
+        body {
+            background-color: #0f0f12;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
-
-        /* حاوية الصناديق - تم دفعها للأسفل هنا */
-        .container {
-            display: flex; flex-direction: column; 
-            justify-content: flex-end; /* دفع العناصر للأسفل */
-            align-items: center; height: 90vh; 
-            padding-bottom: 50px; gap: 15px;
+        h1 { margin-bottom: 10px; font-size: 24px; text-shadow: 0 0 10px #00E5FF; }
+        canvas {
+            border: 4px solid #333;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+            background-color: #121214;
         }
-
-        /* الصندوق الشفاف تماماً مع إطار بنفسجي متحرك */
-        .box {
-            width: 85%; max-width: 300px;
-            padding: 15px 10px;
-            border-radius: 20px;
-            text-align: center; color: white;
-            background: transparent; /* شفافية تامة */
-            border: 2px solid #8a2be2; /* اللون البنفسجي الأساسي */
-            animation: border-glow 3s infinite alternate; /* حركة الإطار */
-            text-decoration: none;
-        }
-
-        /* تأثير حركة الإطار البنفسجي */
-        @keyframes border-glow {
-            from { border-color: #8a2be2; box-shadow: 0 0 5px #8a2be2; }
-            to { border-color: #ff00ff; box-shadow: 0 0 15px #ff00ff; }
-        }
-
-        h1 { font-size: 18px; margin: 0; }
-        p { font-size: 12px; margin: 5px 0 0 0; opacity: 0.9; }
-        .link { font-weight: bold; font-size: 16px; }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop playsinline id="bg-video">
-        <source src="background.mp4" type="video/mp4">
-    </video>
+    <h1>لوحة تحكم لعبة Sorry المبرمجة لـ aechat.ae</h1>
+    <!-- لوحة الرسم بمقاس 600 في 600 بكسل -->
+    <canvas id="gameBoard" width="600" height="600"></canvas>
 
-    <div class="container">
-        <div class="box">
-            <h1>منصتي الإماراتية</h1>
-            <p>تجربة تواصل وألعاب تليق بطموحكم.</p>
-        </div>
-        
-        <a href="chat.html" class="box link">دخول الشات</a>
-        <a href="#" class="box link">تجربة الألعاب</a>
-    </div>
+    <script>
+        const canvas = document.getElementById('gameBoard');
+        const ctx = canvas.getContext('2d');
 
+        const boardSize = 600;
+        const squaresPerSide = 19; // 19 مربع في كل ضلع حسب طلبك
+        const squareSize = boardSize / squaresPerSide;
+
+        // الألوان الحماسية النيون لكل لاعب
+        const playerColors = {
+            player1: '#39FF14', // أخضر نيون
+            player2: '#00E5FF', // أزرق نيون
+            player3: '#FF007F', // فوشيا نيون
+            player4: '#CCFF00'  // أصفر فسفوري
+        };
+
+        function drawBoard() {
+            ctx.clearRect(0, 0, boardSize, boardSize);
+
+            // رسم المربعات على الأطراف الأربعة (الإطار الخارجي)
+            for (let i = 0; i < squaresPerSide; i++) {
+                // الضلع العلوي (اللاعب الأول - أخضر)
+                drawSquare(i * squareSize, 0, i === 1 ? playerColors.player1 : '#222', i === 1);
+
+                // الضلع الأيمن (اللاعب الثاني - أزرق)
+                drawSquare(boardSize - squareSize, i * squareSize, i === 1 ? playerColors.player2 : '#222', i === 1);
+
+                // الضلع السفلي (اللاعب الثالث - فوشيا)
+                drawSquare((squaresPerSide - 1 - i) * squareSize, boardSize - squareSize, i === 1 ? playerColors.player3 : '#222', i === 1);
+
+                // الضلع الأيسر (اللاعب الرابع - أصفر)
+                drawSquare(0, (squaresPerSide - 1 - i) * squareSize, i === 1 ? playerColors.player4 : '#222', i === 1);
+            }
+        }
+
+        function drawSquare(x, y, color, isStart) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, squareSize, squareSize);
+
+            // رسم إطار للمربع
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x, y, squareSize, squareSize);
+
+            // إذا كان مربع البداية (رقم 1) نضع عليه تمييزاً مشعاً
+            if (isStart) {
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x + 2, y + 2, squareSize - 4, squareSize - 4);
+            }
+        }
+
+        // تشغيل الرسم
+        drawBoard();
+    </script>
 </body>
 </html>
