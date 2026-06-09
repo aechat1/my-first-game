@@ -3,242 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>لوحة لعبة aechat.ae - مسار القلعة المفتوح</title>
+    <title>AE CHAT - المنصة الرئيسية</title>
     <style>
-        body {
-            background-color: #160e0a;
-            color: #f4ebd0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-            margin: 0;
-            padding-top: 10px;
-            overflow: hidden;
-            user-select: none;
+        /* إعدادات تصفير وتثبيت أبعاد الشاشة الحقيقية */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; user-select: none; -webkit-user-select: none; }
+        html, body { width: 100%; height: 100%; background: #0c0214; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        
+        /* الحاوية الرئيسية: تقسيم الشاشة الإجباري لمنع سقوط أو فقدان أي عنصر */
+        .mobile-container { 
+            width: 100%; 
+            max-width: 430px; 
+            height: 100%; 
+            background: linear-gradient(180deg, #451066 0%, #25073b 40%, #150224 75%, #0d0114 100%); 
+            display: flex; 
+            flex-direction: column; /* تقسيم رأسي صارم ومحجوز الأبعاد */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9); 
+            overflow: hidden; 
         }
-        h1 { 
-            margin: 0 0 10px 0; 
-            font-size: 16px; 
-            color: #d4b285;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-        }
-        .board-container {
-            width: 94vw;
-            height: 94vw;
-            max-width: 480px;
-            max-height: 480px;
-            position: relative;
-        }
-        canvas {
+        
+        @keyframes uaeGlitter { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* 1. قسم الهيدر العلوي (مساحة ثابتة) */
+        .top-header-wrapper {
             width: 100%;
-            height: 100%;
-            border: 12px solid #2b1a10;
-            border-radius: 20px;
-            background-color: #dfb68d;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 15px 30px rgba(0,0,0,0.6);
+            padding-bottom: 2px;
+            background: linear-gradient(90deg, #ff0000, #00732f, #ffffff, #000000, #ff0000);
+            background-size: 300% 300%;
+            animation: uaeGlitter 5s linear infinite;
+            flex-shrink: 0;
         }
-        .cards-area {
-            margin-top: 15px;
+        .top-header-inner {
+            background: #140221;
+            padding: 10px 15px;
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            width: 90vw;
-            max-width: 450px;
+            justify-content: space-between;
+            align-items: center;
         }
-        .game-card {
-            width: 65px;
-            height: 95px;
-            background: linear-gradient(135deg, #2c251e, #1a1512);
-            border: 2px solid #c5a059;
-            border-radius: 8px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+        .header-room-section { display: flex; align-items: center; gap: 10px; max-width: 75%; }
+        .header-room-badge { width: 34px; height: 34px; border-radius: 50%; background: #25073b; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: center; align-items: center; font-size: 14px; }
+        .header-room-info { display: flex; flex-direction: column; text-align: right; }
+        .header-room-title { font-size: 15px; color: #ffffff; font-weight: 800; }
+        .header-room-desc { font-size: 10px; color: #b899d9; opacity: 0.9; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .top-action-btn { background: rgba(255, 59, 48, 0.2); border: 1px solid rgba(255, 59, 48, 0.4); padding: 5px 12px; border-radius: 6px; color: #ff453a; font-size: 11px; font-weight: 700; cursor: pointer; }
+
+        /* 2. قسم شريط الإعلان (مساحة ثابتة مستقلة مستحيل تختفي) */
+        .pulsing-ad-bar {
+            width: 100%;
+            background: rgba(20, 2, 33, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .ad-click-badge { 
+            font-size: 11px; 
+            background: rgba(255, 255, 255, 0.08); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            color: #ffffff; 
+            padding: 5px 12px; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            flex-shrink: 0; 
+        }
+        .ad-marquee-container {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        /* يخرج النص من جهة زر زيارة في اليسار لليمين */
+        .ad-marquee-text {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marqueeLeftToRight 14s linear infinite;
+        }
+        @keyframes marqueeLeftToRight {
+            0% { transform: translate3d(-100%, 0, 0); }
+            100% { transform: translate3d(100%, 0, 0); }
+        }
+        .ad-marquee-text h4 { color: #ffffff; font-size: 13px; font-weight: 700; display: inline-block; margin-left: 8px; }
+        .ad-marquee-text span { color: #cfa1fc; font-size: 11px; display: inline-block; }
+
+        /* 3. قسم مساحة عرض الرسائل (مساحة حرة تأخذ المتبقي من الشاشة وتدعم التمرير) */
+        .main-content-space {
+            flex: 1;
+            width: 100%;
+            padding: 15px; 
             display: flex;
             flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: transparent;
+        }
+        .chat-message {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 14px;
+            border-radius: 12px;
+            max-width: 85%;
+            color: #ffffff;
+            font-size: 14px;
+            align-self: flex-start;
+            word-break: break-word;
+        }
+
+        /* 4. حاوية الفوتر السفلي الكلية (مساحة ثابتة ومحجوزة في قاع الشاشة إجبارياً) */
+        .bottom-fixed-footer-block {
+            width: 100%;
+            padding: 10px 15px 15px 15px;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-shrink: 0; /* منع المتصفح من ضغط أو إخفاء الفوتر */
+        }
+        
+        /* صندوق الشات الفاخر بدون أي إطار ذهبي فاقع */
+        .royal-chat-box {
+            width: 100%;
+            background: #140221; 
+            border: 1px solid rgba(255, 255, 255, 0.12); 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border-radius: 18px;
+            padding: 12px;
+            display: flex;
+            flex-direction: row; 
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #e5c180;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        /* حقل النص والخط السفلي الفضي الناعم الثابت */
+        .royal-input-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2); 
+            padding: 6px 4px;
+            color: #ffffff;
+            font-size: 15px;
+            outline: none;
+            text-align: right;
+        }
+        .chat-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+
+        /* منطقة الأزرار والابتسامات السريعة والمحاذاة الثابتة */
+        .royal-emoji-area {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+            border-right: 1px solid rgba(255, 255, 255, 0.15); 
+            padding-right: 8px;
+            direction: ltr; 
+        }
+        .royal-emoji-btn { font-size: 20px; cursor: pointer; transition: transform 0.2s; background: none; border: none; display: flex; justify-content: center; align-items: center; }
+        .royal-emoji-btn:active { transform: scale(0.85); }
+        .more-emoji-btn { font-size: 15px; color: #b899d9; font-weight: bold; background: none; border: none; cursor: pointer; }
+        .royal-send-btn { font-size: 18px; color: #52b788; font-weight: bold; cursor: pointer; background: none; border: none; padding: 0 4px; }
+
+        /* شريط المتواجدين حالياً وخيارات المشرف السفلي التابع للكتلة الثابتة */
+        .admin-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5px;
+            width: 100%;
+        }
+        .online-count-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #b899d9;
             font-size: 12px;
+            font-weight: 600;
+        }
+        .online-dot {
+            width: 7px;
+            height: 7px;
+            background: #52b788;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #52b788;
+        }
+        .admin-gear-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #b899d9;
             cursor: pointer;
-            transition: transform 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .game-card:hover {
-            transform: translateY(-8px);
+
+        /* صندوق اختيار المزيد من الابتسامات المنبثق المحمي المرتفع برمجياً */
+        .emoji-picker-popup {
+            position: absolute;
+            bottom: 135px; 
+            left: 15px;
+            right: 15px;
+            background: #140221;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 12px;
+            display: none;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.8);
+            z-index: 30;
         }
-        .card-icon {
-            font-size: 18px;
-            margin-top: 4px;
-        }
+        .emoji-picker-popup.active { display: grid; }
+        .picker-emoji-item { display: flex; justify-content: center; align-items: center; font-size: 26px; cursor: pointer; padding: 4px; border-radius: 8px; }
+        .picker-emoji-item:hover { background: rgba(255, 255, 255, 0.08); }
     </style>
 </head>
 <body>
 
-    <h1>مشروع لعبة Sorry المطور لـ aechat.ae</h1>
-    
-    <div class="board-container">
-        <canvas id="gameBoard" width="600" height="600"></canvas>
-    </div>
-
-    <div class="cards-area">
-        <div class="game-card"><span>جاكارو</span><div class="card-icon">👑</div></div>
-        <div class="game-card"><span>جاكارو</span><div class="card-icon">⚔️</div></div>
-        <div class="game-card"><span>جاكارو</span><div class="card-icon">🛡️</div></div>
-        <div class="game-card"><span>جاكارو</span><div class="card-icon">✨</div></div>
-    </div>
-
-    <script>
-        const canvas = document.getElementById('gameBoard');
-        const ctx = canvas.getContext('2d');
-
-        const boardSize = 600;
-        const center = boardSize / 2;
+    <div class="mobile-container">
         
-        // شبكة من 22 خانة لضمان مساحات مفتوحة تماماً بين اللاعبين بدون تداخل
-        const gridCount = 22; 
-        const squareSize = boardSize / gridCount;
+        <!-- 1. الهيدر العلوي الرسمي -->
+        <div class="top-header-wrapper">
+            <div class="top-header-inner">
+                <div class="header-room-section">
+                    <div class="header-room-badge">👑</div>
+                    <div class="header-room-info">
+                        <span class="header-room-title">غرفة بن دبي</span>
+                        <span class="header-room-desc">مجلس تبادل الأحاديث الثقافية الراقية لأهل دبي</span>
+                    </div>
+                </div>
+                <div class="top-action-btn" onclick="exitRoom()">خروج</div>
+            </div>
+        </div>
 
-        const playerColors = {
-            player1: '#2ecc71', // أخضر
-            player2: '#2980b9', // أزرق
-            player3: '#e74c3c', // أحمر
-            player4: '#f1c40f'  // أصفر
-        };
-
-        // بناء الالتفاف الحقيقي (19 خانة) لضلع واحد بناءً على المخطط الذي رسمته بيدك
-        function generateSideCastlePath() {
-            const path = [];
-            
-            // 1 إلى 5: مستقيم على الحافة الخارجية
-            for(let k = 0; k < 5; k++) path.push({ gx: k, gy: 0 });
-            
-            // 6 و7 و8: دخول عمودي لداخل اللوح الخشبي
-            path.push({ gx: 4, gy: 1 });
-            path.push({ gx: 4, gy: 2 });
-            path.push({ gx: 4, gy: 3 });
-            
-            // 9 و10: التفاف جانبي موازٍ للحافة
-            path.push({ gx: 5, gy: 3 });
-            path.push({ gx: 6, gy: 3 });
-            
-            // 11 و12 و13: خروج عمودي عائد للحافة الخارجية
-            path.push({ gx: 6, gy: 2 });
-            path.push({ gx: 6, gy: 1 });
-            path.push({ gx: 6, gy: 0 });
-            
-            // 14 إلى 19: إكمال المسار المستقيم على الحافة حتى نهاية الضلع
-            for(let k = 7; k <= 12; k++) path.push({ gx: k, gy: 0 });
-            
-            return path;
-        }
-
-        // تدوير مصفوفة النقاط هندسياً لتوزيع القلعة المفتوحة على الجهات الأربعة بالتناظر التام
-        function rotateCoordinates(pt, sideIndex) {
-            const max = gridCount - 1; // 21
-            if (sideIndex === 0) return { x: pt.gx, y: pt.gy };                  // الضلع العلوي
-            if (sideIndex === 1) return { x: max - pt.gy, y: pt.gx };            // الضلع الأيمن
-            if (sideIndex === 2) return { x: max - pt.gx, y: max - pt.gy };      // الضلع السفلي
-            if (sideIndex === 3) return { x: pt.gy, y: max - pt.gx };            // الضلع الأيسر
-        }
-
-        function drawBoard() {
-            ctx.clearRect(0, 0, boardSize, boardSize);
-            drawWoodTexture();
-
-            const baseSidePath = generateSideCastlePath();
-            const colors = [playerColors.player1, playerColors.player2, playerColors.player3, playerColors.player4];
-
-            for (let side = 0; side < 4; side++) {
-                // 1. رسم مسار الالتفاف الـ 19 النظيف والمنعزل
-                baseSidePath.forEach((gridPt, index) => {
-                    const stepNum = index + 1;
-                    const finalGrid = rotateCoordinates(gridPt, side);
-
-                    let isStart = (stepNum === 1);
-                    let color = isStart ? colors[side] : '#3d2516'; // مربع البداية ملون والباقي خشبي غامق غائر
-                    
-                    drawWoodSquare(finalGrid.x * squareSize, finalGrid.y * squareSize, color, isStart, stepNum);
-                });
-
-                // 2. رسم مسار الأمان الخماسي ينطلق مستقيماً لداخل اللوحة من المربع رقم 18 (الفهرس رقم 16 في الالتفاف)
-                const turnGridPt = baseSidePath[16]; 
-                let dx = 0, dy = 1; // الاتجاه الافتراضي للداخل
-
-                for (let h = 1; h <= 5; h++) {
-                    const hx = turnGridPt.gx;
-                    const hy = turnGridPt.gy + h; // ينزل لعمق اللوحة عمودياً
-                    const finalHomeGrid = rotateCoordinates({ gx: hx, gy: hy }, side);
-                    
-                    drawWoodSquare(finalHomeGrid.x * squareSize, finalHomeGrid.y * squareSize, colors[side] + 'bb', false, h);
-                }
-            }
-
-            drawCenterDiscardPile();
-        }
-
-        function drawWoodTexture() {
-            let gradient = ctx.createRadialGradient(center, center, 40, center, center, 280);
-            gradient.addColorStop(0, '#eac39e');
-            gradient.addColorStop(0.8, '#d4a574');
-            gradient.addColorStop(1, '#ac7a48');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, boardSize, boardSize);
-
-            ctx.strokeStyle = 'rgba(74, 43, 23, 0.03)';
-            ctx.lineWidth = 2;
-            for(let r = 50; r < 250; r += 35) {
-                ctx.beginPath();
-                ctx.arc(center, center, r, 0, 2 * Math.PI);
-                ctx.stroke();
-            }
-        }
-
-        function drawWoodSquare(x, y, color, isStart, number) {
-            ctx.save();
-            ctx.fillStyle = color;
-            ctx.fillRect(x + 1, y + 1, squareSize - 2, squareSize - 2);
-
-            ctx.strokeStyle = isStart ? '#fff' : '#54341e';
-            ctx.lineWidth = isStart ? 2 : 1;
-            ctx.strokeRect(x + 1, y + 1, squareSize - 2, squareSize - 2);
-
-            ctx.fillStyle = isStart ? '#fff' : 'rgba(255,255,255,0.3)';
-            ctx.font = isStart ? 'bold 10px Arial' : '8px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(number.toString(), x + (squareSize / 2), y + (squareSize / 2));
-            ctx.restore();
-        }
-
-        function drawCenterDiscardPile() {
-            ctx.save();
-            ctx.translate(center, center);
-            ctx.rotate(5 * Math.PI / 180);
-
-            ctx.fillStyle = '#ffffff';
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = 'rgba(0,0,0,0.4)';
-            ctx.shadowOffsetY = 4;
-            ctx.fillRect(-32, -46, 64, 92);
-
-            ctx.shadowColor = 'transparent';
-            ctx.strokeStyle = '#c5a059';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(-28, -42, 56, 84);
-
-            ctx.fillStyle = '#1c1714';
-            ctx.font = 'bold 24px Georgia, serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('+6', 0, 0);
-            
-            ctx.restore();
-        }
-
-        drawBoard();
-    </script>
-</body>
-</html>
-
+        <!-- 2. شريط الإعلان المحجوز مساحياً: يخرج النص من جهة اليسار لليمين وبشكل دائم -->
+        <div class="pulsing-ad-bar" id="secureAd" data-target-url="https://instagram.com">
+            <span class="ad-click-badge">زيارة</span>
