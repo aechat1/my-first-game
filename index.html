@@ -3,50 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>لوحة لعبة aechat.ae - التصميم الخشبي الفاخر</title>
+    <title>لوحة لعبة aechat.ae - الدخول من الحفرة 18</title>
     <style>
         body {
-            background-color: #1a100a; /* خلفية داكنة لإبراز اللوحة */
+            background-color: #1a0f0a;
             color: #f4ebd0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             height: 100vh;
             margin: 0;
+            padding-top: 10px;
             overflow: hidden;
+            user-select: none;
         }
         h1 { 
-            margin-bottom: 12px; 
-            font-size: 18px; 
-            text-align: center;
+            margin: 0 0 10px 0; 
+            font-size: 16px; 
             color: #d4b285;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
         .board-container {
-            width: 95vw;
-            height: 95vw;
-            max-width: 530px;
-            max-height: 530px;
+            width: 94vw;
+            height: 94vw;
+            max-width: 480px;
+            max-height: 480px;
             position: relative;
         }
         canvas {
             width: 100%;
             height: 100%;
-            border: 10px solid #362215; /* إطار طاولة خشبي سميك وداكن */
-            border-radius: 35px;
-            background-color: #e5b98f; /* لون الخشب الفاتح الدافئ */
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 15px 35px rgba(0,0,0,0.6);
+            border: 12px solid #2b1a10;
+            border-radius: 28px;
+            background-color: #dfb68d;
+            box-shadow: inset 0 0 60px rgba(0,0,0,0.6), 0 15px 30px rgba(0,0,0,0.7);
+        }
+        .cards-area {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 90vw;
+            max-width: 450px;
+        }
+        .game-card {
+            width: 65px;
+            height: 95px;
+            background: linear-gradient(135deg, #2c251e, #1a1512);
+            border: 2px solid #c5a059;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #e5c180;
+            font-size: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .game-card:hover {
+            transform: translateY(-8px);
+        }
+        .card-icon {
+            font-size: 18px;
+            margin-top: 4px;
         }
     </style>
 </head>
 <body>
 
-    <h1>لوحة لعبة Sorry الاحترافية المبرمجة لـ aechat.ae</h1>
+    <h1>مشروع لعبة Sorry المطور لـ aechat.ae</h1>
     
     <div class="board-container">
         <canvas id="gameBoard" width="600" height="600"></canvas>
+    </div>
+
+    <div class="cards-area">
+        <div class="game-card"><span>جاكارو</span><div class="card-icon">👑</div></div>
+        <div class="game-card"><span>جاكارو</span><div class="card-icon">⚔️</div></div>
+        <div class="game-card"><span>جاكارو</span><div class="card-icon">🛡️</div></div>
+        <div class="game-card"><span>جاكارو</span><div class="card-icon">✨</div></div>
     </div>
 
     <script>
@@ -56,63 +97,87 @@
         const boardSize = 600;
         const center = boardSize / 2;
         
-        // الألوان الأصلية للكرات الزجاجية من الصورة التي أرسلتها
         const playerColors = {
-            player1: '#2ecc71', // أخضر زاهي
-            player2: '#2980b9', // أزرق ملكي
-            player3: '#e74c3c', // أحضر دافئ
-            player4: '#f1c40f'  // أصفر ذهبي
+            player1: '#2ecc71', // أخضر
+            player2: '#2980b9', // أزرق
+            player3: '#e74c3c', // أحمر
+            player4: '#f1c40f'  // أصفر
         };
+
+        function getSidePoints(p1, p2, count) {
+            const points = [];
+            const controlX = center + ((p1.x + p2.x)/2 - center) * 0.28;
+            const controlY = center + ((p1.y + p2.y)/2 - center) * 0.28;
+
+            for (let i = 0; i < count; i++) {
+                const t = i / (count - 1);
+                const x = (1-t)*(1-t)*p1.x + 2*(1-t)*t*controlX + t*t*p2.x;
+                const y = (1-t)*(1-t)*p1.y + 2*(1-t)*t*controlY + t*t*p2.y;
+                points.push({x, y});
+            }
+            return points;
+        }
 
         function drawBoard() {
             ctx.clearRect(0, 0, boardSize, boardSize);
+            drawWoodTexture();
 
-            // 1. رسم نقوش خشبية خفيفة في الخلفية لتعطي مظهر الجلد أو الخريطة القديمة
-            drawWoodGrains();
+            const margin = 50;
+            const topC = { x: center, y: margin };
+            const rightC = { x: boardSize - margin, y: center };
+            const bottomC = { x: center, y: boardSize - margin };
+            const leftC = { x: margin, y: center };
 
-            // 2. حساب ورسم المسار المنحني للداخل (على شكل زهرة/نجمة رباعية) ليطابق صورتك تماماً
-            const totalHoles = 76; // يمنحنا 19 حفرة لكل جهة بالتساوي
-            const points = [];
+            const holesCount = 19;
+            const sides = [
+                getSidePoints(topC, rightC, holesCount),
+                getSidePoints(rightC, bottomC, holesCount),
+                getSidePoints(bottomC, leftC, holesCount),
+                getSidePoints(leftC, topC, holesCount)
+            ];
 
-            for (let i = 0; i < totalHoles; i++) {
-                const angle = (i * 2 * Math.PI) / totalHoles - Math.PI / 2;
+            sides.forEach((sidePoints, playerIndex) => {
+                const colors = [playerColors.player1, playerColors.player2, playerColors.player3, playerColors.player4];
                 
-                // معادلة رياضية متطورة لتعديل نصف القطر وجعله ينحني للداخل عند منتصف كل ضلع
-                // تماثلاً مع شكل لعبة جاكارو المرفقة
-                const wave = Math.abs(Math.sin(angle * 2)); // موجة رباعية الأركان
-                const dynamicRadius = boardSize * 0.42 * (1 - wave * 0.22); 
+                // رسم الـ 19 حفرة الخارجية
+                sidePoints.forEach((pt, index) => {
+                    let isStart = (index === 0);
+                    let color = isStart ? colors[playerIndex] : '#3d2314';
+                    drawHole(pt.x, pt.y, color, isStart);
+                });
 
-                const x = center + dynamicRadius * Math.cos(angle);
-                const y = center + dynamicRadius * Math.sin(angle);
-                points.push({x, y});
+                // تعديل ذكي: التقاط الحفرة رقم 18 (الفهرس 17 في البرمجة لأن العد يبدأ من 0)
+                const turnHole = sidePoints[17]; 
+                
+                // تحديد اتجاه الانحراف للداخل نحو المركز بدقة
+                let dx = 0, dy = 0;
+                if (playerIndex === 0) { dx = -24; dy = 24; }   // الأخضر للداخل أسفل يسار
+                if (playerIndex === 1) { dx = -24; dy = -24; }  // الأزرق للداخل أعلى يسار
+                if (playerIndex === 2) { dx = 24; dy = -24; }   // الأحمر للداخل أعلى يمين
+                if (playerIndex === 3) { dx = 24; dy = 24; }    // الأصفر للداخل أسفل يمين
 
-                // تحديد الحفر المميزة للبداية (رقم 1) لكل لاعب
-                let isStart = false;
-                let holeColor = '#4a2f1b'; // اللون الافتراضي لعمق الحفرة الخشبية
+                // رسم الـ 5 حفر المتتالية للداخل انطلاقاً من الحفرة 18
+                for (let h = 1; h <= 5; h++) {
+                    const hx = turnHole.x + (dx * h);
+                    const hy = turnHole.y + (dy * h);
+                    drawHole(hx, hy, colors[playerIndex] + 'aa', false);
+                }
+            });
 
-                if (i === 0) { holeColor = playerColors.player1; isStart = true; }
-                else if (i === 19) { holeColor = playerColors.player2; isStart = true; }
-                else if (i === 38) { holeColor = playerColors.player3; isStart = true; }
-                else if (i === 57) { holeColor = playerColors.player4; isStart = true; }
-
-                drawHole(x, y, holeColor, isStart);
-            }
-
-            // 3. رسم كرات زجاجية (بيادق ثلاثية الأبعاد) مستقرة داخل بعض الحفر للتجربة
-            drawMarble(points[0].x, points[0].y, playerColors.player1);
-            drawMarble(points[4].x, points[4].y, playerColors.player1);
-            drawMarble(points[19].x, points[19].y, playerColors.player2);
-            drawMarble(points[22].x, points[22].y, playerColors.player2);
-
-            // 4. رسم الكارت الملعوب في منتصف الانحناءات تماماً كما في الصورة
-            drawCenterCard();
+            drawCenterDiscardPile();
         }
 
-        function drawWoodGrains() {
-            // خطوط دائرية ناعمة لتمثيل عروق الخشب الطبيعي
-            ctx.strokeStyle = 'rgba(92, 58, 33, 0.08)';
-            ctx.lineWidth = 3;
-            for(let r = 80; r < 240; r += 40) {
+        function drawWoodTexture() {
+            let gradient = ctx.createRadialGradient(center, center, 50, center, center, 300);
+            gradient.addColorStop(0, '#e8be96');
+            gradient.addColorStop(0.8, '#d4a574');
+            gradient.addColorStop(1, '#b58352');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, boardSize, boardSize);
+
+            ctx.strokeStyle = 'rgba(74, 43, 23, 0.05)';
+            ctx.lineWidth = 2;
+            for(let r = 40; r < 260; r += 25) {
                 ctx.beginPath();
                 ctx.arc(center, center, r, 0, 2 * Math.PI);
                 ctx.stroke();
@@ -120,68 +185,44 @@
         }
 
         function drawHole(x, y, color, isStart) {
-            // تأثير الحفرة المحفورة لأسفل (تأثير ثلاثي الأبعاد وعميق)
+            ctx.save();
             ctx.beginPath();
-            ctx.arc(x, y, 10.5, 0, 2 * Math.PI);
+            ctx.arc(x, y, 9.5, 0, 2 * Math.PI);
             
             if (isStart) {
-                // حفرة منبعثة بلون اللاعب كموقع انطلاق
                 ctx.fillStyle = color;
                 ctx.fill();
                 ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 1.5;
                 ctx.stroke();
             } else {
-                // حفرة خشبية عادية غامقة ولها حافة فاتحة لتظهر كأنها محفورة بالليزر
-                ctx.fillStyle = '#3d2516';
+                ctx.fillStyle = '#26150b';
                 ctx.fill();
-                ctx.strokeStyle = '#784d2d';
+                ctx.strokeStyle = '#54341e';
                 ctx.lineWidth = 1;
                 ctx.stroke();
             }
-        }
-
-        function drawMarble(x, y, color) {
-            // تصميم كرات اللعب بشكل ثلاثي الأبعاد زجاجي فاخر
-            ctx.save();
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = 'rgba(0,0,0,0.5)';
-            ctx.shadowOffsetY = 4;
-
-            ctx.beginPath();
-            ctx.arc(x, y, 9.5, 0, 2 * Math.PI);
-            ctx.fillStyle = color;
-            ctx.fill();
             ctx.restore();
-
-            // إضافة لمعة الطاولة والإضاءة العاكسة على الكرة لتبدو كالخرز الزجاجي
-            ctx.beginPath();
-            ctx.arc(x - 3, y - 3, 2.5, 0, 2 * Math.PI);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-            ctx.fill();
         }
 
-        function drawCenterCard() {
+        function drawCenterDiscardPile() {
             ctx.save();
             ctx.translate(center, center);
-            ctx.rotate(6 * Math.PI / 180); // إمالة خفيفة واحترافية للكرت كالصورة تماماً
+            ctx.rotate(5 * Math.PI / 180);
 
-            // جسم الكرت الأبيض مع ظل خلفي ناعم
             ctx.fillStyle = '#ffffff';
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = 'rgba(0,0,0,0.35)';
-            ctx.shadowOffsetY = 3;
-            ctx.fillRect(-35, -50, 70, 100);
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = 'rgba(0,0,0,0.4)';
+            ctx.shadowOffsetY = 4;
+            ctx.fillRect(-32, -46, 64, 92);
 
-            // إطار الكرت الذهبي الداخلي
-            ctx.shadowColor = 'transparent'; // إيقاف الظل للإطار
+            ctx.shadowColor = 'transparent';
             ctx.strokeStyle = '#c5a059';
             ctx.lineWidth = 2;
-            ctx.strokeRect(-31, -46, 62, 92);
+            ctx.strokeRect(-28, -42, 56, 84);
 
-            // رقم الكرت الملعوب في المركز
-            ctx.fillStyle = '#111111';
-            ctx.font = 'bold 26px Georgia, serif';
+            ctx.fillStyle = '#1c1714';
+            ctx.font = 'bold 24px Georgia, serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('+6', 0, 0);
