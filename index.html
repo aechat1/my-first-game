@@ -2,89 +2,140 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>لوحة لعبة aechat.ae</title>
     <style>
         body {
-            background-color: #0f0f12;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
+            background-color: #EAE5D9; /* خلفية دافئة مريحة للعين */
+            color: #3E3D32;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
-        h1 { margin-bottom: 10px; font-size: 24px; text-shadow: 0 0 10px #00E5FF; }
+        h1 { 
+            margin-bottom: 15px; 
+            font-size: 20px; 
+            text-align: center;
+            font-weight: bold;
+        }
+        /* حاوية اللوحة لجعلها متجاوبة تماماً مع الجوال */
+        .board-container {
+            width: 92vw;
+            height: 92vw;
+            max-width: 550px;
+            max-height: 550px;
+            position: relative;
+        }
         canvas {
-            border: 4px solid #333;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
-            background-color: #121214;
+            width: 100%;
+            height: 100%;
+            border: 6px solid #8D8475;
+            border-radius: 12px;
+            background-color: #F7F5F0; /* لون اللوحة الداخلي الهادئ */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
 
-    <h1>لوحة تحكم لعبة Sorry المبرمجة لـ aechat.ae</h1>
-    <!-- لوحة الرسم بمقاس 600 في 600 بكسل -->
-    <canvas id="gameBoard" width="600" height="600"></canvas>
+    <h1>لوحة لعبة Sorry المبرمجة لـ aechat.ae</h1>
+    
+    <div class="board-container">
+        <canvas id="gameBoard" width="600" height="600"></canvas>
+    </div>
 
     <script>
         const canvas = document.getElementById('gameBoard');
         const ctx = canvas.getContext('2d');
 
         const boardSize = 600;
-        const squaresPerSide = 19; // 19 مربع في كل ضلع حسب طلبك
+        const squaresPerSide = 19; 
         const squareSize = boardSize / squaresPerSide;
 
-        // الألوان الحماسية النيون لكل لاعب
+        // الألوان الطبيعية الهادئة مع لمسة حيوية
         const playerColors = {
-            player1: '#39FF14', // أخضر نيون
-            player2: '#00E5FF', // أزرق نيون
-            player3: '#FF007F', // فوشيا نيون
-            player4: '#CCFF00'  // أصفر فسفوري
+            player1: '#618B60', // أخضر عشبي غني
+            player2: '#4A76A8', // أزرق بحري عميق
+            player3: '#B85A6C', // طوبي/وردي حيوي
+            player4: '#D19A4A'  // خردلي ذهبي دافئ
         };
 
         function drawBoard() {
             ctx.clearRect(0, 0, boardSize, boardSize);
 
-            // رسم المربعات على الأطراف الأربعة (الإطار الخارجي)
+            // رسم المسار الخارجي للمربعات (19 في كل ضلع)
             for (let i = 0; i < squaresPerSide; i++) {
-                // الضلع العلوي (اللاعب الأول - أخضر)
-                drawSquare(i * squareSize, 0, i === 1 ? playerColors.player1 : '#222', i === 1);
+                // الضلع العلوي
+                drawSquare(i * squareSize, 0, i === 1 ? playerColors.player1 : '#E2DDD3', i === 1, '1');
 
-                // الضلع الأيمن (اللاعب الثاني - أزرق)
-                drawSquare(boardSize - squareSize, i * squareSize, i === 1 ? playerColors.player2 : '#222', i === 1);
+                // الضلع الأيمن
+                drawSquare(boardSize - squareSize, i * squareSize, i === 1 ? playerColors.player2 : '#E2DDD3', i === 1, '2');
 
-                // الضلع السفلي (اللاعب الثالث - فوشيا)
-                drawSquare((squaresPerSide - 1 - i) * squareSize, boardSize - squareSize, i === 1 ? playerColors.player3 : '#222', i === 1);
+                // الضلع السفلي
+                drawSquare((squaresPerSide - 1 - i) * squareSize, boardSize - squareSize, i === 1 ? playerColors.player3 : '#E2DDD3', i === 1, '3');
 
-                // الضلع الأيسر (اللاعب الرابع - أصفر)
-                drawSquare(0, (squaresPerSide - 1 - i) * squareSize, i === 1 ? playerColors.player4 : '#222', i === 1);
+                // الضلع الأيسر
+                drawSquare(0, (squaresPerSide - 1 - i) * squareSize, i === 1 ? playerColors.player4 : '#E2DDD3', i === 1, '4');
             }
+
+            // رسم قطع اللاعبين البدائية (البيادق) للتجربة البصرية
+            drawPawn(1 * squareSize, 0, playerColors.player1); // قطعة اللاعب 1 عند انطلاقها
+            drawPawn(boardSize - squareSize, 1 * squareSize, playerColors.player2); // قطعة اللاعب 2
         }
 
-        function drawSquare(x, y, color, isStart) {
+        function drawSquare(x, y, color, isStart, playerNum) {
             ctx.fillStyle = color;
             ctx.fillRect(x, y, squareSize, squareSize);
 
-            // رسم إطار للمربع
-            ctx.strokeStyle = '#333';
+            // حدود المربعات
+            ctx.strokeStyle = '#C9C2B5';
             ctx.lineWidth = 1;
             ctx.strokeRect(x, y, squareSize, squareSize);
 
-            // إذا كان مربع البداية (رقم 1) نضع عليه تمييزاً مشعاً
+            // تمييز مربع البداية رقم 1
             if (isStart) {
                 ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 3;
                 ctx.strokeRect(x + 2, y + 2, squareSize - 4, squareSize - 4);
+                
+                // كتابة رقم 1 صغير داخل المربع
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('1', x + (squareSize/2), y + (squareSize/2));
             }
         }
 
-        // تشغيل الرسم
+        // دالة مخصصة لرسم قطع اللعب بشكل دائري أنيق
+        function drawPawn(x, y, color) {
+            const centerX = x + squareSize / 2;
+            const centerY = y + squareSize / 2;
+            const radius = squareSize * 0.35;
+
+            // ظل القطعة لإعطائها بعداً ثلاثي الأبعاد
+            ctx.beginPath();
+            ctx.arc(centerX + 2, centerY + 2, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.fill();
+
+            // جسم القطعة الأساسي
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // تنفيذ الرسم
         drawBoard();
     </script>
 </body>
 </html>
-
